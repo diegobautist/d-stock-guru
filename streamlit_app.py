@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import yfinance as yf
+import datetime
 
-# Custom CSS to change backgroup color
+# Custom CSS for Design
 st.markdown(
     """
     <style>
@@ -22,7 +24,7 @@ st.markdown(
         text-shadow: 2px 2px 4px #000000;
     }
     .title-logo-container img {
-        height: 50px; /* Adjust the height as needed */
+        height: 50px; 
     }
     </style>
     """,
@@ -30,45 +32,36 @@ st.markdown(
 )
 
 # Title with logo
-st.markdown(
-    """
-    <div class="title-logo-container">
-        <h1>The D Stock Guru!</h1>
-        <img src="images/logo.png" alt="Logo">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.markdown("<h1 style='color: white;'>The D Stock Guru Market Dashboard</h1>", unsafe_allow_html=True)
+with col2:
+    st.image("static/images/logo.png", use_column_width=True)
 
 # Header
 st.write(
-    "Welcome to the D Stock Guru! This app will help you analyze the stock market and make informed decisions."
+    "This dashboard provides insights into stock market trends and allows you to interact with various widgets to customize your view."
 )
 
-# Interactive Table
+# Function to get real-time stock data from Yahoo Finance
+def get_stock_data(symbol):
+    stock = yf.Ticker(symbol)
+    hist = stock.history(period="1d", interval="1m")
+    return hist
+
+# Interactive Table 
 st.header("Interactive Table")
-data = {
-    'Stock': ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA'],
-    'Price': [150, 2800, 300, 3500, 700],
-    'Change': [1.2, -0.5, 0.8, 1.5, -2.3]
-}
-df = pd.DataFrame(data)
-st.dataframe(df)
-
-# Line Chart
-st.header("Line Chart")
-chart_data = pd.DataFrame(
-    np.random.randn(20, 3),
-    columns=['AAPL', 'GOOGL', 'MSFT']
-)
-st.line_chart(chart_data)
+symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA']
+selected_symbol = st.selectbox("Select a stock symbol", symbols)
+stock_data = get_stock_data(selected_symbol)
+st.write(stock_data)
 
 # Area Chart
-st.header("Area Chart")
-st.area_chart(chart_data)
+st.header("Stock Price Trends")
+st.area_chart(stock_data['Close'])
 
-# Map
-st.header("Map")
+# Map (for demonstration purposes, using random data)
+st.header("Company Locations")
 map_data = pd.DataFrame(
     np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
     columns=['lat', 'lon']
@@ -80,29 +73,21 @@ if st.button('Click me'):
     st.write('Button clicked!')
 
 # Checkbox Widget
-if st.checkbox('Show dataframe'):
-    st.write(df)
+if st.checkbox('Show stock data'):
+    st.write(stock_data)
 
 # Feedback Boxes
-st.success('Success message')
-st.info('Information message')
-st.warning('Warning message')
-st.error('Error message')
-try:
-    raise ValueError("An exception occurred")
-except ValueError as e:
-    st.exception(e)
+st.success('Dashboard loaded successfully!')
 
 # Additional Widgets
 st.header("Additional Widgets")
 st.radio("Choose an option", ['Option 1', 'Option 2', 'Option 3'])
-st.selectbox("Select a stock", ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA'])
-st.multiselect("Select multiple stocks", ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA'])
+st.multiselect("Select multiple stocks", symbols)
 st.slider("Select a range", 0, 100, (25, 75))
 st.select_slider("Select a value", options=['Low', 'Medium', 'High'])
 st.text_input("Enter text")
 st.number_input("Enter a number", min_value=0, max_value=100, value=50)
-st.date_input("Select a date")
+st.date_input("Select a date", value=datetime.date.today())
 st.time_input("Select a time")
 st.file_uploader("Upload a file")
 st.color_picker("Pick a color")
