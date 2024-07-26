@@ -7,7 +7,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: purple;
+        background-color: #1d1160;
     }
     .title-logo-container {
         display: flex;
