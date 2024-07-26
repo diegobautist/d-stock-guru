@@ -2,8 +2,43 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Title
-st.title("The D Stock Guru!")
+# Custom CSS to change backgroup color
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: purple;
+    }
+    .title-logo-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .title-logo-container h1 {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        font-size: 2.5em;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+    }
+    .title-logo-container img {
+        height: 50px; /* Adjust the height as needed */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Title with logo
+st.markdown(
+    """
+    <div class="title-logo-container">
+        <h1>The D Stock Guru!</h1>
+        <img src="images/logo.png" alt="Logo">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Header
 st.write(
